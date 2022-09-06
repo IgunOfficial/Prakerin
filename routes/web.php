@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MyController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +17,37 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/testmodel', function() {
+    $query = Post :: all();
+    return $query;
+    });
+        
+
+// Route::get('/about', function() {
+//     return view('about');
+//     });
+
+Route::get('/about', 'MyController@showAbout');
+        
+
+
+        
+Auth::routes();
+
+
+
+Route::group(['middleware' => ['auth'],'prefix' => 'client-area'], function () {
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});
+
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isAdmin']], function () {
+    Route::get('profile', function () {
+        return view('profile');
+    });
+});
+
+Route::get('/errors', function () {
+    return view(403);
 });
